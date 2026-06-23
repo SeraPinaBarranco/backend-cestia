@@ -1,6 +1,6 @@
 from pathlib import Path
 from groq import Groq
-import os, json, base64
+import os, json, base64, re
 from dotenv import load_dotenv
 from models.ticket import TicketResponse
 
@@ -52,11 +52,10 @@ async def analyze_ticket(image_bytes: bytes) -> TicketResponse:
 
     text = response.choices[0].message.content.strip()
 
-    # Limpiar si el modelo añade bloques markdown
-    if "```" in text:
-        text = text.split("```")[1]
-        if text.startswith("json"):
-            text = text[4:]
+    # Limpiar bloques markdown ```json ... ```
+    match = re.search(r'```(?:json)?\s*([\s\S]*?)```', text)
+    if match:
+        text = match.group(1).strip()
 
-    data = json.loads(text.strip())
+    data = json.loads(text)
     return TicketResponse(**data)
