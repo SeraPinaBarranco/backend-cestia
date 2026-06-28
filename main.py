@@ -12,7 +12,7 @@ app = FastAPI(title="Cestia API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vue dev server
+    allow_origins=["http://localhost:5173", "https://192.168.1.59:5173"], # Vue dev server
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
